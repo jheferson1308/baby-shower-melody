@@ -53,6 +53,7 @@ img { display: block; max-width: 100%; }
     border: 8px solid #fffafd;
     box-shadow: 0 22px 60px rgba(107, 74, 104, 0.22);
   }
+  .portada { min-height: calc(100vh - 64px); min-height: calc(100dvh - 64px); }
 }
 
 .decor-fondo { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
@@ -119,13 +120,14 @@ img { display: block; max-width: 100%; }
 }
 
 .portada {
-  position: absolute;
-  inset: 0;
+  position: relative;
   z-index: 40;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
   padding: 70px 20px 38px;
   text-align: center;
   background:
