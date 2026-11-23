@@ -352,8 +352,8 @@ body.abierta .invitacion { opacity: 1; visibility: visible; transform: none; }
 .bloque--inicio { padding-top: 18px; }
 .ola-separador { position: relative; z-index: 1; height: 24px; margin: -6px 0 8px; color: rgba(255, 255, 255, 0.7); pointer-events: none; }
 .ola-separador svg { display: block; width: 100%; height: 100%; }
-.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
-.reveal.visible { opacity: 1; transform: none; }
+.reveal { opacity: 1; transform: none; transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: none; animation: revelar 0.7s ease both; }
 
 .adorno-linea { font-size: 0.8rem; letter-spacing: 0.3em; color: var(--lila); }
 .etiqueta { margin: 10px 0 0; font-family: var(--curva); font-size: clamp(2.1rem, 10vw, 3rem); line-height: 1.05; color: var(--lila-oscuro); }
@@ -539,6 +539,7 @@ body.abierta .invitacion { opacity: 1; visibility: visible; transform: none; }
 @keyframes shimmer { 0%, 20% { transform: translateX(0) skewX(-20deg); } 60%, 100% { transform: translateX(360px) skewX(-20deg); } }
 @keyframes enfocar { from { opacity: 0; filter: blur(6px); transform: translateY(10px); } to { opacity: 1; filter: blur(0); transform: none; } }
 @keyframes entrar { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes revelar { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
 @keyframes reboteNumero { 0% { opacity: 0; transform: scale(0.4) translateY(18px); } 60% { opacity: 1; transform: scale(1.08) translateY(-4px); } 100% { transform: scale(1); } }
 @keyframes dibujarLinea { from { opacity: 0; transform: scaleX(0); } to { opacity: 1; transform: scaleX(1); } }
 @keyframes desenrollar { from { opacity: 0; transform: scaleX(0.3) rotate(-2deg); } to { opacity: 1; transform: scaleX(1) rotate(0); } }

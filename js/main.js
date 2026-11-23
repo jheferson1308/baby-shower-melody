@@ -43,6 +43,14 @@ const CONFIG = {
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $ = (selector) => document.querySelector(selector);
 
+function seguro(nombre, funcion) {
+  try {
+    return funcion();
+  } catch (error) {
+    return null;
+  }
+}
+
 function actualizarDerechos() {
   const destino = $("#derechos");
   const texto = CONFIG.derechos.replace("{anio}", String(new Date().getFullYear()));
@@ -268,20 +276,34 @@ function celebrarApertura() {
   window.setTimeout(() => capa.remove(), 4200);
 }
 
+function configurarRespaldoPortada() {
+  window.setTimeout(() => {
+    const portada = $(".portada");
+    if (!portada || document.body.classList.contains("abriendo") || document.body.classList.contains("abierta")) return;
+    const estilo = window.getComputedStyle(portada);
+    if (Number.parseFloat(estilo.opacity) < 1 || estilo.visibility === "hidden" || estilo.display === "none") {
+      portada.style.opacity = "1";
+      portada.style.visibility = "visible";
+      portada.style.transform = "none";
+    }
+  }, 2000);
+}
+
 let abriendo = false;
 function abrirInvitacion() {
   if (abriendo || document.body.classList.contains("abierta")) return;
   abriendo = true;
   document.body.classList.add("abriendo");
-  $("#pista-abrir").classList.add("pista-oculta");
-  sonar();
+  const pista = $("#pista-abrir");
+  if (pista) pista.classList.add("pista-oculta");
+  seguro("musica", sonar);
 
   window.setTimeout(() => {
     document.body.classList.add("abierta");
-    window.scrollTo(0, 0);
-    configurarReveals();
-    configurarCierre();
-    celebrarApertura();
+    seguro("scroll", () => window.scrollTo(0, 0));
+    seguro("reveals", configurarReveals);
+    seguro("cierre", configurarCierre);
+    seguro("confeti", celebrarApertura);
   }, reduceMotion ? 60 : 900);
 }
 
@@ -317,21 +339,25 @@ function configurarMapa() {
 }
 
 function init() {
-  actualizarContenido();
-  configurarMapa();
-  configurarImagenes();
-  actualizarMeta();
-  configurarContador();
-  configurarParallax();
+  seguro("contenido", actualizarContenido);
+  seguro("mapa", configurarMapa);
+  seguro("imagenes", configurarImagenes);
+  seguro("meta", actualizarMeta);
+  seguro("contador", configurarContador);
 
-  $("#btn-abrir").addEventListener("click", abrirInvitacion);
-  $("#btn-musica").addEventListener("click", alternarMusica);
+  const botonAbrir = $("#btn-abrir");
+  const botonMusica = $("#btn-musica");
+  if (botonAbrir) botonAbrir.addEventListener("click", abrirInvitacion);
+  if (botonMusica) botonMusica.addEventListener("click", alternarMusica);
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) pausar();
+    if (document.hidden) seguro("pausa", pausar);
   });
   document.querySelectorAll(".pie__link").forEach((enlace) => {
     enlace.addEventListener("click", (evento) => evento.preventDefault());
   });
+
+  seguro("respaldo-portada", configurarRespaldoPortada);
+  seguro("parallax", configurarParallax);
 }
 
 init();
