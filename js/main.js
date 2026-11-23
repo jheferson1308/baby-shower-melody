@@ -14,9 +14,7 @@ const CONFIG = {
   urlUbicacion: "https://maps.app.goo.gl/Ebk99xYZZWMm1LKt8",
   urlMapaEmbed: "https://www.google.com/maps?q=-14.056126,-75.728339&z=17&output=embed",
 
-  whatsappReservas: "51907744617",
-  mensajeConMama: "Hola, confirmo mi asistencia al baby shower de Melody Aithana, el sábado 5 de diciembre a las 10:00 p.m. Voy con mamá. Mi nombre es: ",
-  mensajeConPapa: "Hola, confirmo mi asistencia al baby shower de Melody Aithana, el sábado 5 de diciembre a las 10:00 p.m. Voy con papá. Mi nombre es: ",
+  mensajeConfirmacion: "Hola, mamá, confirmo mi asistencia al baby shower de Melody Aithana, el sábado 5 de diciembre a las 10:00 p.m. Mi nombre es: ",
 
   rutaMusica: "assets/musica.mp3",
   volumenMusica: 0.6,
@@ -39,6 +37,9 @@ const CONFIG = {
   creditos: "✦ Fabricado por Colerson ✦",
   derechos: "© {anio} Colerson. Todos los derechos reservados. | Ica, Perú"
 };
+
+const WHATSAPP_NUMBER = "51907744617";
+const START_TIME = 24;
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $ = (selector) => document.querySelector(selector);
@@ -89,10 +90,11 @@ function actualizarContenido() {
   $("#creditos").textContent = CONFIG.creditos;
   actualizarDerechos();
 
-  const numero = String(CONFIG.whatsappReservas).replace(/[^0-9]/g, "");
-  const base = `https://wa.me/${numero}?text=`;
-  $("#btn-mama").href = base + encodeURIComponent(CONFIG.mensajeConMama);
-  $("#btn-papa").href = base + encodeURIComponent(CONFIG.mensajeConPapa);
+  const numeroWhatsapp = String(WHATSAPP_NUMBER).replace(/[^0-9]/g, "");
+  const botonConfirmar = $("#btn-confirmar");
+  if (botonConfirmar) {
+    botonConfirmar.href = `https://wa.me/${numeroWhatsapp}?text=${encodeURIComponent(CONFIG.mensajeConfirmacion)}`;
+  }
 }
 
 function configurarImagenes() {
@@ -157,6 +159,7 @@ function configurarContador() {
 
 let reproduciendo = false;
 let audio = null;
+let inicioMusicaAplicado = false;
 
 function prepararAudio() {
   if (audio) return;
@@ -164,6 +167,17 @@ function prepararAudio() {
   audio.loop = true;
   audio.volume = CONFIG.volumenMusica;
   if (!audio.getAttribute("src")) audio.src = CONFIG.rutaMusica;
+}
+
+function aplicarInicioMusica() {
+  if (inicioMusicaAplicado || !audio || !Number.isFinite(START_TIME) || START_TIME <= 0) return;
+  if (audio.readyState < 1) {
+    audio.addEventListener("loadedmetadata", aplicarInicioMusica, { once: true });
+    return;
+  }
+  const duracion = Number.isFinite(audio.duration) ? audio.duration : START_TIME;
+  audio.currentTime = Math.min(START_TIME, Math.max(0, duracion - 0.25));
+  inicioMusicaAplicado = true;
 }
 
 function actualizarBotonMusica(estaSonando) {
@@ -176,6 +190,7 @@ function actualizarBotonMusica(estaSonando) {
 
 function sonar() {
   prepararAudio();
+  aplicarInicioMusica();
   const promesa = audio.play();
   if (promesa && typeof promesa.then === "function") {
     promesa.then(() => actualizarBotonMusica(true)).catch(() => actualizarBotonMusica(false));
@@ -356,6 +371,7 @@ function init() {
     enlace.addEventListener("click", (evento) => evento.preventDefault());
   });
 
+  seguro("preparar-audio", prepararAudio);
   seguro("respaldo-portada", configurarRespaldoPortada);
   seguro("parallax", configurarParallax);
 }

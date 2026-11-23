@@ -373,15 +373,16 @@ body.abierta .invitacion { opacity: 1; visibility: visible; transform: none; }
   z-index: 0;
   display: inline-block;
   min-width: min(90%, 300px);
-  padding: 12px 18px;
+  max-width: 100%;
+  padding: 16px 10px;
   background: linear-gradient(100deg, #b58ae0, #c9a7e8 45%, #b58ae0);
   border: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow: 0 8px 18px rgba(143, 99, 189, 0.25);
 }
-.liston::before, .liston::after { content: ''; position: absolute; z-index: -1; top: 12px; border-style: solid; }
+.liston::before, .liston::after { content: ''; position: absolute; z-index: -1; top: 16px; border-style: solid; }
 .liston::before { left: -22px; border-width: 16px 22px 16px 0; border-color: transparent #9c70cf transparent transparent; }
 .liston::after { right: -22px; border-width: 16px 0 16px 22px; border-color: transparent transparent transparent #9c70cf; }
-.liston__texto { position: relative; z-index: 1; display: block; font-family: var(--curva); font-size: clamp(2.4rem, 11vw, 3.4rem); line-height: 1; color: #fff; text-shadow: 0 2px 3px rgba(110, 70, 140, 0.25); }
+.liston__texto { position: relative; z-index: 1; display: block; max-width: 100%; margin: 0 auto; font-family: "Times New Roman", Times, serif; font-size: clamp(1.9rem, 9vw, 3.1rem); font-weight: 700; letter-spacing: 0.06em; line-height: 1.05; text-align: center; text-wrap: balance; color: #fff; text-shadow: 0 2px 0 rgba(88, 45, 126, 0.65), 0 4px 12px rgba(74, 32, 110, 0.55); }
 
 .fecha { padding: 2px 0; }
 .fecha p { margin: 0; }
